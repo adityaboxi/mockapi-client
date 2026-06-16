@@ -8,14 +8,14 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
-    outDir: 'build',        // 👈 changed from 'dist' to 'build'
+    outDir: 'build',    
   },
   server: {
     proxy: {
       '/api': {
         target: process.env.VITE_API_BASE_URL || 'http://localhost:3000',
         changeOrigin: true,
-        // Keep /api prefix – no rewrite
+      
       }
     }
   }

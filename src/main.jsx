@@ -12,7 +12,7 @@ import { SocketProvider } from "./context/SocketContext";
 function RootContainer() {
 
   useEffect(() => {
-    // 1. Force the absolute root window background to look dark dark-mode friendly
+   
     document.documentElement.style.backgroundColor = '#1e1e24';
     document.body.style.backgroundColor = '#1e1e24';
 
