@@ -9,7 +9,7 @@ package-lock.json   # Optional – some commit it, some don't. I recommend commi
 .env
 .env.local
 .env.*.local
-.env.production     # If you commit this, remove this line. 
+.env.production    
                     # But since it contains only public URLs, you *can* commit it.
                     # I recommend keeping it out to avoid accidental secrets.
 
