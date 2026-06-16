@@ -19,7 +19,7 @@ function ManageAccount() {
   const userProjectsRef = useRef([]);
   const joinedRooms = useRef(new Set());
 
-  // ========== Environment Variables ==========
+
   const REQUESTS_RECEIVED_URL = import.meta.env.VITE_API_URL_REQUESTS_RECEIVED;
   const REQUESTS_SENT_URL = import.meta.env.VITE_API_URL_REQUESTS_SENT;
   const USER_APIS_URL = import.meta.env.VITE_API_URL_USER_APIS;
