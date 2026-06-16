@@ -15,9 +15,22 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socketInstance = io(import.meta.env.VITE_API_BASE_URL || "http://localhost:3000", {
+    // Force WebSocket transport to bypass Render proxy issues
+    const socketInstance = io(import.meta.env.VITE_API_BASE_URL, {
       withCredentials: true,
+      transports: ["websocket"], // 👈 This is critical for Render
     });
+
+    // Log success
+    socketInstance.on("connect", () => {
+      console.log("✅ Socket connected successfully");
+    });
+
+    // Log the exact error
+    socketInstance.on("connect_error", (err) => {
+      console.error("❌ Socket connection error:", err.message);
+    });
+
     setSocket(socketInstance);
 
     return () => {

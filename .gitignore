@@ -3,15 +3,16 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json   # Optional – some commit it, some don't. I recommend committing it.
 
 # -------------------- Environment Variables --------------------
+# Ignore local and development env files, but NOT .env.production
 .env
 .env.local
 .env.*.local
-.env.production    
-                    # But since it contains only public URLs, you *can* commit it.
-                    # I recommend keeping it out to avoid accidental secrets.
+.env.development
+.env.staging
+
+# .env.production is NOT ignored – commit it (it only has public URLs)
 
 # -------------------- Build Outputs --------------------
 dist/
