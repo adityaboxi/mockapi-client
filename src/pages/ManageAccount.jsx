@@ -170,7 +170,7 @@ function ManageAccount() {
 
     try {
       const url = `${DELETE_VERSION_BASE_URL}/${encodeURIComponent(versionId)}?projectId=${encodeURIComponent(projectId)}`;
-      console.log("Deleting version with ID:", versionId);
+      console.log("Deleting version ID:", versionId);
 
       const response = await fetch(url, {
         method: "DELETE",
