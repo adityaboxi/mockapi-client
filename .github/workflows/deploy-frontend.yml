@@ -35,7 +35,6 @@ jobs:
           tags: |
             ${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
-          # No build-args needed – .env.production is copied
 
       - name: Trigger Render Deploy
         run: |
