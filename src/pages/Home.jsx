@@ -50,7 +50,7 @@ function Home() {
     selectProject(project.projectname, project.id, project.invitationCode);
   };
 
-  // Logout handler
+ 
   const handleLogout = async () => {
     localStorage.removeItem("isProjectListOpen");
     localStorage.removeItem("isApiHistoryOpen");
@@ -98,7 +98,7 @@ function Home() {
             isWhiteTheme ? "text-gray-500 hover:text-gray-700" : "text-gray-400 hover:text-white"
           }`}
         >
-          API History {isApiHistoryOpen ? ">>" : "<<"}
+          API Historyyyyyy {isApiHistoryOpen ? ">>" : "<<"}
         </button>
 
         <span className={`font-medium ${isWhiteTheme ? "text-gray-500" : "text-gray-400"}`}>
