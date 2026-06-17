@@ -135,8 +135,7 @@ function ProjectDetailsModal({ project, isOpen, onClose, onStatusChange, onInvit
         alert(err.error || "Failed to update status");
       }
     } catch (e) {
-      console.error(e);
-      alert("Network error");
+
     } finally {
       setStatusUpdating(false);
     }

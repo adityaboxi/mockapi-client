@@ -490,8 +490,8 @@ function MainContent() {
         });
       }, 1000);
     } catch (error) {
-      console.error('Ask AI error:', error);
-      alert('Failed to get AI suggestion');
+      
+     
     } finally {
       setIsAiLoading(false);
     }

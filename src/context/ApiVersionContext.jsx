@@ -29,7 +29,6 @@ export const ApiVersionProvider = ({ children }) => {
       });
       if (response.ok) {
         const result = await response.json();
-        console.log('[ApiVersionContext] Received:', result.data);
         setCurrentVersionData({ ...result.data });
         return result.data;
       } else {

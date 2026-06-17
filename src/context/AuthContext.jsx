@@ -83,7 +83,6 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: error.error || 'Subscription failed' };
       }
     } catch (error) {
-      console.error("Subscribe error:", error);
       return { success: false, error: 'Network error' };
     }
   };
@@ -103,7 +102,6 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: error.error || 'Unsubscription failed' };
       }
     } catch (error) {
-      console.error("Unsubscribe error:", error);
       return { success: false, error: 'Network error' };
     }
   };
@@ -145,7 +143,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData) => {
     if (!userData || !userData.username) {
-      console.error("login called without valid userData");
       return;
     }
     setUser({
@@ -163,7 +160,6 @@ export const AuthProvider = ({ children }) => {
         credentials: 'include'
       });
     } catch (error) {
-      console.error("Logout backend connection error:", error);
     } finally {
       setUser(null);
       setIsGuest(false);

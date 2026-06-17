@@ -45,7 +45,7 @@ function ApiLog() {
     }
 
     const onConnect = () => {
-      console.log("[ApiLog] Socket connected, joining project:", projectId);
+    
       if (mountedRef.current) {
         setIsConnected(true);
         setSocketError(null);
@@ -54,7 +54,7 @@ function ApiLog() {
     };
 
     const onConnectError = (err) => {
-      console.error("[ApiLog] Socket connect error:", err);
+   
       if (mountedRef.current) {
         setIsConnected(false);
         setSocketError("Connection failed. Retrying...");
@@ -62,12 +62,12 @@ function ApiLog() {
     };
 
     const onDisconnect = (reason) => {
-      console.warn("[ApiLog] Socket disconnected:", reason);
+   
       if (mountedRef.current) setIsConnected(false);
     };
 
     const onInitialLogs = (dbLogs) => {
-      console.log("[ApiLog] Received initial logs:", dbLogs?.length);
+   
       if (mountedRef.current) setLogs(dbLogs || []);
     };
 

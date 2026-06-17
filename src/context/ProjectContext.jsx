@@ -35,7 +35,6 @@ export const ProjectProvider = ({ children }) => {
       });
       return response.ok;
     } catch (error) {
-      console.error("Verification error:", error);
       return false;
     }
   }, [VERIFY_PROJECT_URL]);

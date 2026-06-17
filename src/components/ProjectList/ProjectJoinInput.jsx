@@ -45,7 +45,7 @@ const ProjectJoinInput = React.memo(({ user, onProjectJoined, refreshProjects, i
       if (refreshProjects) await refreshProjects();
       if (onProjectJoined) onProjectJoined(joinedProject);
     } catch (error) {
-      alert(error.message);
+   
     } finally {
       setIsJoining(false);
     }

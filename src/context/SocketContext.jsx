@@ -23,12 +23,10 @@ export const SocketProvider = ({ children }) => {
 
     // Log success
     socketInstance.on("connect", () => {
-      console.log("✅ Socket connected successfully");
     });
 
     // Log the exact error
     socketInstance.on("connect_error", (err) => {
-      console.error("❌ Socket connection error:", err.message);
     });
 
     setSocket(socketInstance);

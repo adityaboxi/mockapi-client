@@ -87,7 +87,6 @@ function ApiHistory({ isApiHistoryOpen, projectId: propProjectId }) {
     if (!baseurlpath) return;
     const pid = projectId || currentProject?.id;
     if (!pid) return;
-    console.log(`[ApiHistory] Loading version ${version} for project ${pid}`);
     await loadVersion(pid, username, baseurlpath, version);
   };
 
