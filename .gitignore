@@ -3,22 +3,23 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json   
+yarn.lock          
 
 # -------------------- Environment Variables --------------------
-# Ignore local and development env files, but NOT .env.production
+# Ignore all .env files, except .env.example (to provide a template)
 .env
-.env.local
-.env.*.local
-.env.development
-.env.staging
-
-# .env.production is NOT ignored – commit it (it only has public URLs)
+.env.*
+!.env.example      
+.env.production   
 
 # -------------------- Build Outputs --------------------
 dist/
 build/
 out/
 *.tsbuildinfo
+*.tgz
+*.tar.gz
 
 # -------------------- IDE / Editor --------------------
 .vscode/
@@ -26,22 +27,54 @@ out/
 *.iml
 *.swp
 *.swo
+.project
+.classpath
+.settings/
 
 # -------------------- OS Files --------------------
 .DS_Store
 Thumbs.db
+Desktop.ini
 
 # -------------------- Logs --------------------
 logs/
 *.log
+*.log.*
 
-# -------------------- Docker --------------------
+# -------------------- Testing / Coverage --------------------
+coverage/
+.nyc_output/
+__tests__/
+__mocks__/
+*.test.js
+*.spec.js
+*.test.ts
+*.spec.ts
+
+# -------------------- Docker / Deployment --------------------
 docker-compose.override.yml
 *.tar
+Dockerfile     
+.dockerignore      
 
-# -------------------- Misc --------------------
+# -------------------- Temp / Cache --------------------
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*.swo
+.eslintcache
+.stylelintcache
+.pnpm-store/
+
+# -------------------- Secrets / Keys --------------------
 *.pem
 *.key
 *.crt
-coverage/
-.nyc_output/
+*.p12
+*.pfx
+
+# -------------------- Misc --------------------
+# Ignore .env files, but keep .env.example
+!.env.example
