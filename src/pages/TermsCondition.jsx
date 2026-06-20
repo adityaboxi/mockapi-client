@@ -12,7 +12,6 @@ const TermsCondition = () => {
         isWhiteTheme ? "bg-white text-gray-800" : "bg-[#1e1e24] text-gray-300"
       }`}
     >
-      {/* -------- HEADER / NAV BAR -------- */}
       <div
         className={`h-12 shrink-0 flex items-center px-6 border-b z-10 ${
           isWhiteTheme
@@ -35,7 +34,6 @@ const TermsCondition = () => {
       {/* -------- SCROLLABLE CONTENT -------- */}
       <div className="flex-1 overflow-y-auto px-6 py-12 md:py-16">
         <div className="max-w-2xl mx-auto space-y-10">
-          
           {/* -------- TITLE & DATE -------- */}
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight mb-2">
@@ -46,7 +44,7 @@ const TermsCondition = () => {
                 isWhiteTheme ? "text-gray-400" : "text-zinc-500"
               }`}
             >
-              Last updated: June 19, 2026
+              Last updated: June 21, 2026
             </p>
             <div className="h-1 w-12 bg-blue-500 rounded mt-4"></div>
           </div>
@@ -58,9 +56,7 @@ const TermsCondition = () => {
           </p>
 
           <hr
-            className={
-              isWhiteTheme ? "border-gray-100" : "border-zinc-800"
-            }
+            className={isWhiteTheme ? "border-gray-100" : "border-zinc-800"}
           />
 
           {/* -------- SECTION 1: AGREEMENT -------- */}
@@ -195,14 +191,14 @@ const TermsCondition = () => {
             </p>
           </section>
 
-          {/* -------- SECTION 7: AUTHENTICATION PRIORITY (NEW) -------- */}
+          {/* -------- SECTION 7: AUTHENTICATION PRIORITY -------- */}
           <section className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-bold tracking-tight">
                 7. Authentication Priority & Request Validation
               </h2>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-purple-500/10 text-purple-500 uppercase tracking-wider">
-                TL;DR: Bearer/API Key - Headers - Cookies
+                TL;DR: Bearer/API Key → Headers → Cookies
               </span>
             </div>
             <div className="space-y-3 text-sm opacity-85 leading-relaxed">
@@ -256,11 +252,120 @@ const TermsCondition = () => {
             </div>
           </section>
 
-          {/* -------- SECTION 8: MODIFICATIONS & INQUIRIES (was Section 7) -------- */}
+          {/* ============ NEW SECTION 9: COOKIE POLICY ============ */}
           <section className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-bold tracking-tight">
-                8. Modifications & Inquiries
+                9. Cookie Policy & Data Privacy
+              </h2>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-teal-500/10 text-teal-500 uppercase tracking-wider">
+                TL;DR: Essential cookies only, no third-party tracking
+              </span>
+            </div>
+            <p className="text-sm opacity-85 leading-relaxed">
+              The Service uses cookies solely to enable core functionality and 
+              improve user experience. We do not sell, share, or use cookies 
+              for cross-site advertising. Our use of cookies is limited to:
+            </p>
+            <ul className="list-disc pl-5 text-sm space-y-2 opacity-85">
+              <li>
+                <strong>Session Management:</strong> Cookies are used to 
+                maintain your authenticated session (e.g., <code>sessionToken</code>) 
+                and to simulate API authentication flows during testing.
+              </li>
+              <li>
+                <strong>User Preferences:</strong> Cookies store your UI 
+                preferences (e.g., <code>userPref</code> for dark/light mode) 
+                to improve your experience.
+              </li>
+              <li>
+                <strong>Security & Integrity:</strong> 
+                <code>HttpOnly</code> and <code>SameSite</code> attributes are 
+                automatically applied to protect against XSS and CSRF attacks.
+              </li>
+            </ul>
+            <div
+              className={`p-3 rounded border text-xs ${
+                isWhiteTheme
+                  ? "bg-amber-50 border-amber-200 text-gray-700"
+                  : "bg-amber-950/20 border-amber-800/30 text-gray-300"
+              }`}
+            >
+              <p className="font-bold">🔒 Your Privacy Rights:</p>
+              <p className="mt-1">
+                Since the Service is a <strong>local development tool</strong>, 
+                we do not transmit any cookie data to external servers. All 
+                cookies are scoped to your local machine or test domain. You 
+                have the right to clear all cookies at any time via your 
+                browser settings. For EU users, this complies with the 
+                "strictly necessary" exemption under GDPR/EPR.
+              </p>
+            </div>
+          </section>
+
+          {/* ============ NEW SECTION 10: USAGE & DYNAMIC RESPONSES ============ */}
+          <section className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-lg font-bold tracking-tight">
+                10. Usage Guidelines & Dynamic Mocking
+              </h2>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-500 uppercase tracking-wider">
+                TL;DR: Define APIs, toggle AI responses, get fake data
+              </span>
+            </div>
+            <div className="space-y-3 text-sm opacity-85 leading-relaxed">
+              <p>
+                <strong>How to define an API:</strong> Provide a URL path 
+                (e.g., <code>/users/:id</code>), select an HTTP method, and 
+                define your request/response schemas. You can enforce 
+                authentication (Bearer/API Key), custom headers, and cookies 
+                directly through the UI.
+              </p>
+              <div
+                className={`border-l-4 pl-4 py-2 text-xs font-mono tracking-tight ${
+                  isWhiteTheme
+                    ? "border-indigo-400 bg-indigo-50/50 text-gray-700"
+                    : "border-indigo-600 bg-indigo-950/20 text-gray-300"
+                }`}
+              >
+                <p>
+                  <strong className="text-indigo-500">🤖 Dynamic Responses:</strong>{" "}
+                  Enable <code>"airesponse": true</code> in your API definition. 
+                  Use Faker.js placeholders to generate realistic, ever-changing 
+                  data:
+                </p>
+                <ul className="list-disc ml-4 mt-2 space-y-1">
+                  <li><code>{"{{faker.person.fullName}}"}</code> → "Dr. John Doe"</li>
+                  <li><code>{"{{faker.internet.email}}"}</code> → "john@example.net"</li>
+                  <li><code>{"{{faker.string.uuid}}"}</code> → "a7d3f8e2-..."</li>
+                  <li><code>{"{{faker.date.recent}}"}</code> → "2026-06-20T15:32:00Z"</li>
+                </ul>
+                <p className="mt-2 text-green-400">
+                  ✅ The server recursively scans every nested field in your 
+                  response body – arrays, objects, and strings – to replace 
+                  placeholders on every request.
+                </p>
+              </div>
+              <p>
+                <strong>Authentication Flow:</strong> Your API definitions 
+                strictly follow the priority described in <strong>Section 7</strong>. 
+                You can mix Bearer tokens with custom headers and cookies to 
+                simulate complex real‑world authorization (e.g., JWT + CSRF token).
+              </p>
+              <p className="text-xs opacity-70">
+                💡 <strong>Pro Tip:</strong> Combine dynamic responses with 
+                rate limiting (<code>rateLimit</code>) and latency 
+                (<code>latency</code>) to mimic production API behavior 
+                perfectly.
+              </p>
+            </div>
+          </section>
+
+          {/* -------- SECTION 11: MODIFICATIONS & INQUIRIES (was Section 8) -------- */}
+          <section className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-lg font-bold tracking-tight">
+                11. Modifications & Inquiries
               </h2>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 uppercase tracking-wider">
                 TL;DR: Check here for updates
@@ -287,7 +392,6 @@ const TermsCondition = () => {
               </a>
             </p>
           </section>
-
         </div>
       </div>
     </div>
