@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../context/ThemeContext";
 
-// Import environment variables directly
 const API_PROJECTS = import.meta.env.VITE_API_URL_PROJECTS;
 const API_RESET_INVITE = import.meta.env.VITE_API_URL_RESET_INVITE;
 const API_VERIFY_INVITE_OTP = import.meta.env.VITE_API_URL_VERIFY_INVITE_OTP;
 const API_UPDATE_PROJECT_STATUS = import.meta.env.VITE_API_UPDATE_PROJECT_STATUS;
+const API_DELETE_PROJECT = import.meta.env.VITE_API_URL_DELETEPROJECT;
 
-function ProjectDetailsModal({ project, isOpen, onClose, onStatusChange, onInvitationCodeUpdated }) {
+function ProjectDetailsModal({ project, isOpen, onClose, onStatusChange, onInvitationCodeUpdated, onProjectDeleted }) {
   const { theme } = useTheme();
   const isDarkTheme = theme === "dark";
   const [showOtpSection, setShowOtpSection] = useState(false);
@@ -22,14 +22,19 @@ function ProjectDetailsModal({ project, isOpen, onClose, onStatusChange, onInvit
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [statusSuccess, setStatusSuccess] = useState(false);
   const [successTarget, setSuccessTarget] = useState(null);
-  
+
+  const [inviteCopied, setInviteCopied] = useState(false);
+  const inviteTimeoutRef = useRef(null);
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+
   const intervalRef = useRef(null);
   const successTimeoutRef = useRef(null);
 
   useEffect(() => {
     if (!isOpen || !project?.id) return;
     setLocalInvitationCode(project.invitationCode);
-    // Fetch fresh project data using VITE_API_URL_PROJECTS
     fetch(API_PROJECTS, { credentials: "include" })
       .then((r) => r.json())
       .then((data) => {
@@ -55,6 +60,7 @@ function ProjectDetailsModal({ project, isOpen, onClose, onStatusChange, onInvit
   useEffect(() => {
     return () => {
       if (successTimeoutRef.current) clearTimeout(successTimeoutRef.current);
+      if (inviteTimeoutRef.current) clearTimeout(inviteTimeoutRef.current);
     };
   }, []);
 
@@ -135,46 +141,58 @@ function ProjectDetailsModal({ project, isOpen, onClose, onStatusChange, onInvit
         alert(err.error || "Failed to update status");
       }
     } catch (e) {
-
+      // silent, mirrors original behavior
     } finally {
       setStatusUpdating(false);
     }
   };
 
-
-
-  // Inside ProjectDetailsModal component, add a new state:
-const [inviteCopied, setInviteCopied] = useState(false);
-const inviteTimeoutRef = useRef(null);
-
-// Copy function for invitation code
-const copyInvitationCode = async () => {
-  if (!localInvitationCode) return;
-  await navigator.clipboard.writeText(localInvitationCode);
-  setInviteCopied(true);
-  if (inviteTimeoutRef.current) clearTimeout(inviteTimeoutRef.current);
-  inviteTimeoutRef.current = setTimeout(() => setInviteCopied(false), 2000);
-};
-
-// Cleanup timeout on unmount
-useEffect(() => {
-  return () => {
+  const copyInvitationCode = async () => {
+    if (!localInvitationCode) return;
+    await navigator.clipboard.writeText(localInvitationCode);
+    setInviteCopied(true);
     if (inviteTimeoutRef.current) clearTimeout(inviteTimeoutRef.current);
+    inviteTimeoutRef.current = setTimeout(() => setInviteCopied(false), 2000);
   };
-}, []);
-  
-  
-  
+
+  const handleDeleteProject = async () => {
+    if (isDeleting) return;
+    const projectId = project.id || project._id;
+    if (!projectId) {
+      setDeleteError("Missing project id");
+      return;
+    }
+
+    setIsDeleting(true);
+    setDeleteError(null);
+
+    try {
+      const response = await fetch(`${API_DELETE_PROJECT}/${projectId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || errorData.message || "Failed to delete project");
+      }
+
+      const result = await response.json();
+      console.log("✅ Project deleted:", result);
+      if (onProjectDeleted) onProjectDeleted(projectId);
+      onClose();
+    } catch (err) {
+      setDeleteError(err.message);
+      console.error("❌ Delete error:", err);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   if (!isOpen) return null;
   const displayMembers = members.length > 0 ? members : ["No members yet"];
 
-
-
-
-  
-  
-  
-  
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div
@@ -189,21 +207,21 @@ useEffect(() => {
         </div>
 
         <div className="space-y-1 text-xs">
-         <div className="flex justify-between items-center">
-  <span>Code:</span>
-  <div className="flex items-center gap-2 cursor-pointer" onClick={copyInvitationCode}>
-    <code className="text-indigo-400 font-mono font-bold">{localInvitationCode}</code>
-    {inviteCopied ? (
-      <svg className="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-      </svg>
-    ) : (
-      <svg className="w-3.5 h-3.5 text-gray-400 hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-      </svg>
-    )}
-  </div>
-</div>
+          <div className="flex justify-between items-center">
+            <span>Code:</span>
+            <div className="flex items-center gap-2 cursor-pointer" onClick={copyInvitationCode}>
+              <code className="text-indigo-400 font-mono font-bold">{localInvitationCode}</code>
+              {inviteCopied ? (
+                <svg className="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5 text-gray-400 hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              )}
+            </div>
+          </div>
           <div className="flex justify-between">
             <span>Status:</span>
             <span className={project.isActive !== false ? "text-emerald-400" : "text-red-400"}>
@@ -214,6 +232,20 @@ useEffect(() => {
             <span>Time created:</span>
             <code className="text-indigo-400 font-mono font-bold">{project.createdAt || "N/A"}</code>
           </div>
+
+          <div className="flex justify-between items-center">
+            <div>Delete project:</div>
+            <button
+              onClick={handleDeleteProject}
+              disabled={isDeleting}
+              className={`bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded ${
+                isDeleting ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {isDeleting ? "Deleting..." : "Confirm"}
+            </button>
+          </div>
+          {deleteError && <p className="text-red-400 text-xs text-right">{deleteError}</p>}
         </div>
 
         <div className="border-t pt-2">
@@ -236,9 +268,7 @@ useEffect(() => {
             onClick={() => handleStatusChange(true, "active")}
             disabled={project.isActive === true || statusUpdating}
             className={`flex-1 py-1 text-xs rounded text-white transition-colors flex items-center justify-center gap-1 ${
-              statusSuccess && successTarget === "active"
-                ? "bg-emerald-600"
-                : "bg-emerald-600 hover:bg-emerald-500"
+              statusSuccess && successTarget === "active" ? "bg-emerald-600" : "bg-emerald-600 hover:bg-emerald-500"
             } disabled:opacity-40`}
           >
             {statusSuccess && successTarget === "active" ? (
@@ -256,9 +286,7 @@ useEffect(() => {
             onClick={() => handleStatusChange(false, "inactive")}
             disabled={project.isActive === false || statusUpdating}
             className={`flex-1 py-1 text-xs rounded text-white transition-colors flex items-center justify-center gap-1 ${
-              statusSuccess && successTarget === "inactive"
-                ? "bg-red-600"
-                : "bg-red-600 hover:bg-red-500"
+              statusSuccess && successTarget === "inactive" ? "bg-red-600" : "bg-red-600 hover:bg-red-500"
             } disabled:opacity-40`}
           >
             {statusSuccess && successTarget === "inactive" ? (
@@ -292,9 +320,7 @@ useEffect(() => {
                   onChange={(e) => setOtpCode(e.target.value)}
                   placeholder="6-digit OTP"
                   className={`flex-1 px-2 py-1 text-xs rounded border ${
-                    isDarkTheme
-                      ? "border-zinc-700 bg-zinc-800 text-white"
-                      : "border-gray-300 bg-white text-gray-900"
+                    isDarkTheme ? "border-zinc-700 bg-zinc-800 text-white" : "border-gray-300 bg-white text-gray-900"
                   }`}
                 />
                 <button
@@ -306,9 +332,7 @@ useEffect(() => {
                 </button>
               </div>
               {otpError && <p className="text-red-400 text-xs text-center">{otpError}</p>}
-              {timer > 0 && (
-                <p className="text-xs text-center text-gray-500">Resend available in {timer}s</p>
-              )}
+              {timer > 0 && <p className="text-xs text-center text-gray-500">Resend available in {timer}s</p>}
             </div>
           )}
         </div>
